@@ -10,7 +10,7 @@ picking = True # if the user is picking not
 def accessMode(mode, L): # this allows the user to change the data in the table
     picking = True
     
-    if type(L[mode]) == int:
+    if type(L[mode]) == int: # if the element is an integer
         while picking:
             userinput = input('enter an integer: ')
 
@@ -22,8 +22,21 @@ def accessMode(mode, L): # this allows the user to change the data in the table
                 print('try an integer')
                 time.sleep(2)
                 os.system('cls') # cls
+                
+    if type(L[mode]) == float: # if the element is a float
+        while picking:
+            userinput = input('enter a time (in decimal format): ')
+
+            if userinput.isdigit():
+                L[mode] = float(userinput)
+                picking = False
+
+            else:
+                print('try a number')
+                time.sleep(2)
+                os.system('cls') # cls
    
-    elif type(L[mode]) == list:
+    elif type(L[mode]) == list: # if the element is a list
         for k in range(3):
             while picking:
                 userinput = input('enter an integer ('+ str(k) + ' of 3): ')
@@ -38,7 +51,7 @@ def accessMode(mode, L): # this allows the user to change the data in the table
 
             picking = True
                            
-    else:
+    else: # if the element is a string
         while picking:
             userinput = input('enter y if true or n if false: ')
 
@@ -59,7 +72,7 @@ def accessMode(mode, L): # this allows the user to change the data in the table
     print(L) # prints the entire table at the end    
     time.sleep(2)
     
-def config(L): # main program
+def fileMenu(L): # main program
     # init variables
     chooseMode = True
     cnt = 0 # a counting variable for numbering the
@@ -68,8 +81,8 @@ def config(L): # main program
     while chooseMode: # this is the main program loop for editing data while the match is going on
         print('Which stat would you like to access?')
         
-        for i in names:
-            print('> [' + str(cnt) + '] ' + i + '\n')
+        for i in L:
+            print('> [' + str(cnt) + '] ' + names[cnt] + '\n')
             cnt += 1 # counts the array position of the element
             
         cnt = 0 # resets the count value
@@ -108,20 +121,20 @@ def makeFile(pDir, L): # makes the file
 def makeFolder(pDir): # declaring a function to make a folder
     os.mkdir(pDir) # makes the new directory
     
-    # resets scoring values
+    # inits values for next folder
     
     inCommunity = "false"
     scoring = [0, 0, 0]
     docking = [0, 0, 0]
     links = 0
-    cycleTime = 0
+    cycleTime = 0.0
     
     L = [inCommunity, scoring, docking, links, cycleTime] # a list of a bunch of data
     
-    # runs the python script that edits the text file
+    # runs the file editing functions
     
-    config(L)
-    makeFile(pDir, L)
+    fileMenu(L) # brings up the file editing menu
+    makeFile(pDir, L) # actually makes the file
 
 def countFoldersWithSameName(n): # this function counts how many folders have the same name inputted that are in the same directory
     
@@ -157,6 +170,25 @@ def countFoldersWithSameName(n): # this function counts how many folders have th
 
     return nameCnt + 1 # will return the amount of folders with the same name as the proposed folder plus one because the proposed folder isn't made yet
 
+def chooseMakeFolder(p, c):
+     while p: # this loop runs until a decision is made
+        newVar = "New folder: " + proposedDir + " created. Do you want to make another? (y/n):"
+        userInput = input(newVar) # stores the user's choice in a variable
+
+        userInput.lower() # lowercases all input
+
+        if userInput == "n": # if the user enters "n"
+            c = False # stops the main loop from running
+            p = False # stops the picking loop
+            return p, c # returns p and c as false
+        
+        elif userInput == "y": # if the user enters "y"
+            p = False # just stops the picking loop because the user wants to make another folder
+            return p, c # returns p as false and c as true
+    
+        else: # if the user didn't enter a vaild response
+            print("not valid response, try y or n")
+                
 # will run repeatedly
 
 # MAIN ############################################################################################################################################################
@@ -169,23 +201,7 @@ while canRun:
     if not os.path.exists(proposedDir): # if there is no folder with the proposed name already
         makeFolder(proposedDir) # makes the new directory
         
-        while picking: # this loop runs until a decision is made
-            newVar = "New folder: " + proposedDir + " created. Do you want to make another? (y/n):"
-            userInput = input(newVar) # stores the user's choice in a variable
-            
-            userInput.lower() # lowercases all input
-        
-            if userInput == "n": # if the user enters "n"
-                canRun = False # stops the main loop from running
-                picking = False # stops the picking loop
-                
-            elif userInput == "y": # if the user enters "y"
-                picking = False # just stops the picking loop because the user wants to make another folder
-                
-            else: # if the user didn't enter a vaild response
-                print("not valid response, try y or n")
-
-        picking = True # the next time the user picks to make a new file, the picking loop will run until they pick a vaild option
+        picking, canRun = chooseMakeFolder(picking, canRun) # the user decides if they want to make another file or exit the program
         
     else: # if there is already a folder with the same name as the proposed name
         
@@ -202,33 +218,14 @@ while canRun:
             elif userInput == "y": # if the user enters "y"
                 
                 makeFolder(proposedDir + "(" + str(countFoldersWithSameName(folderName)) + ")") # makes a folder with extra numbers to separate it from like-named folders
-                while picking: # this loop runs until a decision is made
-                    newVar = "New folder: " + proposedDir + " created. Do you want to make another? (y/n):"
-                    userInput = input(newVar) # stores the user's choice in a variable
-            
-                    userInput.lower() # lowercases all input
-        
-                    if userInput == "n": # if the user enters "n"
-                        canRun = False # stops the main loop from running
-                        picking = False # stops the picking loop
-                
-                    elif userInput == "y": # if the user enters "y"
-                        picking = False # just stops the picking loop because the user wants to make another folder
-                
-                    else: # if the user didn't enter a vaild response
-                        print("not valid response, try y or n")
-
-                picking = False # just stops the picking loop because the user wants to make the folder
+               
+                picking, canRun = chooseMakeFolder(picking, canRun) # the user decides if they want to make another file or exit the program
                 
             else: # if the user didn't enter a vaild response
                 print("not valid response, try y or n")
-
-        picking = True # the next time the user picks to make a new file, the picking loop will run until they pick a vaild option
+                
+    picking = True # the next time the user picks to make a new file, the picking loop will run until they pick a vaild option
 
     # When the file is created or not, the shell clears after 3 seconds
     
     os.system('cls') # clears the screen
-
-
-
-
