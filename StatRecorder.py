@@ -71,6 +71,8 @@ def accessMode(mode, L): # this allows the user to change the data in the table
                 
     print(L) # prints the entire table at the end    
     time.sleep(2)
+
+######################################################################################################################
     
 def fileMenu(L): # main program
     # init variables
@@ -105,18 +107,22 @@ def fileMenu(L): # main program
 
         os.system('cls') # cls
 
+######################################################################################################################
+
 def makeFile(pDir, L): # makes the file
     
     with open(os.path.join(pDir, 'teamTable.txt'), 'w') as file: # makes and opens the file
 
-        for i in L:
-            if type(i) == list:
+        for i in L: # cycles through the data table
+            if type(i) == list: # if the type of the data is a list, the list has to be iterated over in order to write the data (only strings can be written)
                 for k in i:
-                    file.write(str(k) + '\n')
+                    file.write(str(k) + '\n') # writes to the file 
             else:
-                file.write(str(i) + '\n')
+                file.write(str(i) + '\n') # writes to the file
 
-        file.close()
+        file.close() # closes the file
+
+######################################################################################################################
         
 def makeFolder(pDir): # declaring a function to make a folder
     os.mkdir(pDir) # makes the new directory
@@ -135,6 +141,8 @@ def makeFolder(pDir): # declaring a function to make a folder
     
     fileMenu(L) # brings up the file editing menu
     makeFile(pDir, L) # actually makes the file
+
+######################################################################################################################
 
 def countFoldersWithSameName(n): # this function counts how many folders have the same name inputted that are in the same directory
     
@@ -170,6 +178,8 @@ def countFoldersWithSameName(n): # this function counts how many folders have th
 
     return nameCnt + 1 # will return the amount of folders with the same name as the proposed folder plus one because the proposed folder isn't made yet
 
+######################################################################################################################
+
 def chooseMakeFolder(p, c):
      while p: # this loop runs until a decision is made
         newVar = "New folder: " + proposedDir + " created. Do you want to make another? (y/n):"
@@ -188,12 +198,10 @@ def chooseMakeFolder(p, c):
     
         else: # if the user didn't enter a vaild response
             print("not valid response, try y or n")
-                
-# will run repeatedly
 
 # MAIN ############################################################################################################################################################
 
-while canRun:
+while canRun: # will run repeatedly
     
     folderName = input("please input the name of a folder you want to make: ") # prompts the user to make a new file
     proposedDir = str(os.getcwd() + "/" + folderName) # saves the proposed directory of the file in a variable
