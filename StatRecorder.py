@@ -6,6 +6,7 @@ import os, time# imports the os module and system module
 
 canRun = True # a boolean that controls whether the main loop can run
 picking = True # if the user is picking not
+Teams_Dir = str(os.getcwd() + '/TEAMS')
 
 def accessMode(mode, L): # this allows the user to change the data in the table
     picking = True
@@ -110,8 +111,10 @@ def fileMenu(L): # main program
 ######################################################################################################################
 
 def makeFile(pDir, L): # makes the file
+    fileName = 'teamTable' # saves the name of the data tables
+    nameCnt = countFoldersWithSameName(fileName, pDir) # gets how many files are named the same as the current file
     
-    with open(os.path.join(pDir, 'teamTable.txt'), 'w') as file: # makes and opens the file
+    with open(os.path.join(pDir, fileName + '(' + str(nameCnt) + ')'), 'w') as file: # makes and opens the file
 
         for i in L: # cycles through the data table
             if type(i) == list: # if the type of the data is a list, the list has to be iterated over in order to write the data (only strings can be written)
@@ -144,14 +147,14 @@ def makeFolder(pDir): # declaring a function to make a folder
 
 ######################################################################################################################
 
-def countFoldersWithSameName(n): # this function counts how many folders have the same name inputted that are in the same directory
+def countFoldersWithSameName(n, DIR): # this function counts how many folders have the same name inputted that are in the same directory
     
     cnt = 0 # counts how many times the for loop iterates
     nameCnt = 0 # counts howmany files are named the same
     ltrCnt = 1 # counts letters in file names. Starts at 1 because the lowest amount of characters a string with one letter in it is one
     synthesizedString = "" # represents the files name re-constructed
     
-    for path in os.walk(os.getcwd()): # prints out the entire directory including what is inside folders
+    for path in os.walk(DIR): # prints out the entire directory including what is inside folders
         
         if cnt < 1: # the objects in the base path 
             print(path[1]) # prints out the array
@@ -202,9 +205,14 @@ def chooseMakeFolder(p, c):
 # MAIN ############################################################################################################################################################
 
 while canRun: # will run repeatedly
+
+    while picking:
+        userInput = input("Would you like to make a file in a new folder or in a pre-existing folder") # prompts the user to either make a new file or make a file in an already made one
+
+
     
     folderName = input("please input the name of a folder you want to make: ") # prompts the user to make a new file
-    proposedDir = str(os.getcwd() + "/" + folderName) # saves the proposed directory of the file in a variable
+    proposedDir = str(Teams_Dir + "/" + folderName) # saves the proposed directory of the file in a variable
 
     if not os.path.exists(proposedDir): # if there is no folder with the proposed name already
         makeFolder(proposedDir) # makes the new directory
@@ -225,7 +233,7 @@ while canRun: # will run repeatedly
                 
             elif userInput == "y": # if the user enters "y"
                 
-                makeFolder(proposedDir + "(" + str(countFoldersWithSameName(folderName)) + ")") # makes a folder with extra numbers to separate it from like-named folders
+                makeFolder(proposedDir + "(" + str(countFoldersWithSameName(folderName, Teams_Dir)) + ")") # makes a folder with extra numbers to separate it from like-named folders
                
                 picking, canRun = chooseMakeFolder(picking, canRun) # the user decides if they want to make another file or exit the program
                 
