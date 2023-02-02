@@ -219,7 +219,7 @@ def newFolder(): # this makes a new folder
                 
             elif userInput == "y": # if the user enters "y"
                 
-                makeFolder(proposedDir + "(" + str(countFoldersWithSameName(folderName, Teams_Dir)) + ")", 1) # makes a folder with extra numbers to separate it from like-named folders
+                makeFolder(proposedDir + "(" + str(countFoldersWithSameName(folderName, Teams_Dir, 1)) + ")", 1) # makes a folder with extra numbers to separate it from like-named folders
                
                 picking, canRun = chooseMakeFolder(picking, canRun, proposedDir) # the user decides if they want to make another file or exit the program
                 
@@ -239,6 +239,7 @@ def preExistingFolder():
     
     for path in os.walk(Teams_Dir): # brings up a table that contains the path, folders, and files in the directory
         for team in path[1]:
+            print('eeeeeee')
             teamTable.append(team) # appends the team
 
     if len(teamTable) > 0:        
